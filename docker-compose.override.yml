@@ -14,7 +14,7 @@ services:
           ipv4_address: 172.16.35.3
 
     redis-mailcow:
-      image: redismailcowproxy
+      image: ghcr.io/der-jan/redis-proxy-mailcow
       environment:
         - LISTEN=${IPV4_NETWORK}.249:6379
         - SENTINEL=172.16.35.3:26379,172.16.33.1:26379,172.16.34.34:26379
