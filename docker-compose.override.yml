@@ -1,0 +1,37 @@
+services:
+
+    redis-sentinel:
+      image: redis:7-alpine
+      command: redis-server /etc/redis/sentinel.conf --sentinel
+      volumes:
+        - ./data/conf/sentinel:/etc/redis
+      restart: always
+      networks:
+        mailcow-network:
+          aliases:
+            - sentinel
+        redis_net:
+          ipv4_address: 172.16.35.3
+
+    redis-mailcow:
+      image: redismailcowproxy
+      environment:
+        - LISTEN=${IPV4_NETWORK}.249:6379
+        - SENTINEL=172.16.35.3:26379,172.16.33.1:26379,172.16.34.34:26379
+        - MASTER=mailcow-lan
+        - REDISNETIP=172.16.35.2
+      entrypoint: /redis.sh
+      networks:
+        redis_net:
+          ipv4_address: 172.16.35.2
+
+networks:
+  redis_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: bridge_redis
+      com.docker.network.bridge.enable_ip_masquerade: 0
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.35.0/24
