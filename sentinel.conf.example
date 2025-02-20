@@ -1,0 +1,8 @@
+port 26379
+logfile ""
+
+bind 172.16.35.3
+
+sentinel announce-ip "172.16.35.3"
+sentinel auth-pass mailcow-redis password
+sentinel monitor mailcow-redis 172.16.35.2 6379 2

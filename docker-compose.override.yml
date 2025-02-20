@@ -16,6 +16,8 @@ services:
         - LISTEN=${IPV4_NETWORK}.249:6379
         - MASTER=mailcow-redis
         - REDISNETIP=${REDISNETWORK:-172.16.35}.2
+      depends_on:
+        - redis-sentinel
       entrypoint: /redis.sh
       networks:
         redis_net:
