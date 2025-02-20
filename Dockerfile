@@ -1,6 +1,7 @@
 FROM patrickdk/redis-sentinel-proxy AS proxy
 
 FROM redis:7-alpine AS redis 
+RUN apk add jq
 COPY --from=proxy /redis-sentinel-proxy /redis-sentinel-proxy
 COPY --from=proxy /health /health
 

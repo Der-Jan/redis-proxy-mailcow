@@ -8,19 +8,18 @@ services:
       restart: always
       networks:
         redis_net:
-          ipv4_address: 172.16.35.3
+          ipv4_address: ${REDISNETWORK:-172.16.35}.3
 
     redis-mailcow:
       image: ghcr.io/der-jan/redis-proxy-mailcow
       environment:
         - LISTEN=${IPV4_NETWORK}.249:6379
-        - SENTINEL=172.16.35.3:26379,172.16.33.1:26379,172.16.34.34:26379
-        - MASTER=mailcow-lan
-        - REDISNETIP=172.16.35.2
+        - MASTER=mailcow-redis
+        - REDISNETIP=${REDISNETWORK:-172.16.35}.2
       entrypoint: /redis.sh
       networks:
         redis_net:
-          ipv4_address: 172.16.35.2
+          ipv4_address: ${REDISNETWORK:-172.16.35}.2
 
 networks:
   redis_net:
@@ -31,4 +30,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.16.35.0/24
+        - subnet: ${REDISNETWORK:-172.16.35}.0/24
